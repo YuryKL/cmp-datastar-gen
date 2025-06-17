@@ -1,0 +1,26 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  attributesLink: https://raw.githubusercontent.com/starfederation/datastar/refs/heads/develop/tools/vscode-extension/src/data-attributes.json
+
+tasks:
+  default:
+    cmds:
+      - task: refresh
+      - task: generate
+    silent: true
+  refresh:
+    cmds:
+      - rm -rf input.json
+      - wget -O input.json {{.attributesLink}} --quiet
+      - test -s input.json || (echo "Failed to download or empty file" && exit 69)
+    silent: true
+  generate:
+    cmds:
+      - rm -rf data.lua
+      - go run main.go
+    silent: true
+    
+
